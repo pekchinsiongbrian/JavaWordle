@@ -1,6 +1,6 @@
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -107,7 +107,9 @@ public class LaunchWordle {
         HashMap<String, Integer> wotdCharCount = new HashMap<String, Integer>();
         for (int i = 0; i < 5; i++) {
             if (!idxToIgnore.contains(i)) {
-                wotdCharCount.put(Character.toString(wotd.charAt(i)), i);
+                String currChar = Character.toString(wotd.charAt(i));
+                int currCharCount = wotdCharCount.containsKey(currChar) ? wotdCharCount.get(currChar) : 0;
+                wotdCharCount.put(Character.toString(wotd.charAt(i)), currCharCount + 1);
             }
         }
         for (int i = 0; i < 5; i++) {
@@ -184,7 +186,7 @@ class Dictionary {
 
     public Dictionary() throws DictionaryInitializationException {
         // guessable, wotd: 2315
-        try (Stream<String> stream = Files.lines(Paths.get("./guessableWotd.txt"))) {
+        try (Stream<String> stream = Files.lines(Path.of("./guessableWotd.txt"))) {
             stream.forEach(x -> {
                 validDict.add(x);
                 overallDict.add(x);
@@ -194,7 +196,7 @@ class Dictionary {
         }
 
         // guessable, never wotd: 10657
-        try (Stream<String> stream = Files.lines(Paths.get("./guessableNeverWotd.txt"))) {
+        try (Stream<String> stream = Files.lines(Path.of("./guessableNeverWotd.txt"))) {
             stream.forEach(x -> {
                 overallDict.add(x);
             });
