@@ -8,7 +8,7 @@ _Note that the output display only works on Visual Studio Code._ Regular termina
 
 Here is how it should look like:
 
-![Game start](./img/0.png)
+![Game start](./img/0.PNG)
 
 ![Attempt 1](./img/1.PNG)
 
