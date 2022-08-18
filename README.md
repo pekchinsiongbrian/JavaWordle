@@ -8,12 +8,14 @@ _Note that the output display only works on Visual Studio Code._ Regular termina
 
 Here is how it should look like:
 
-![1](./1.PNG)
+![Game start](./0.PNG)
 
-![2](./2.PNG)
+![Attempt 1](./1.PNG)
 
-![3](./3.PNG)
+![Attempt 2](./2.PNG)
 
-![4](./4.PNG)
+![Attempt 3](./3.PNG)
 
-![5](./5.PNG)
+![Attempt 4](./4.PNG)
+
+![Attempt 5](./5.PNG)
