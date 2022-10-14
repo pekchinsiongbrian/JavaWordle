@@ -1,9 +1,11 @@
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Stream;
@@ -21,18 +23,22 @@ public class LaunchWordle {
     String[][] game = setupGame();
     assert dict instanceof Dictionary;
     String wotd = dict.getWotd();
-    displayGame(game);
+    List<String> unusedLetters = new ArrayList<String>(
+        Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"));
+    displayGame(game, unusedLetters);
 
     Scanner sc = new Scanner(System.in);
     boolean gameOver = false;
     int guessNum = 1;
     while (!gameOver && guessNum <= 6) {
-      System.out.println("Guess a 5 letter word (Attempt " + guessNum + "):");
+      System.out.println("Guess a 5 letter word (Attempt " + guessNum + "/6):");
       String guess = sc.next().toLowerCase();
       if (dict.isValidGuess(guess)) {
         Result res = compareWords(wotd, guess);
         game = updateGame(game, res.getNewLine(), guessNum);
-        displayGame(game);
+        unusedLetters = updateUnusedLetters(guess, unusedLetters);
+        displayGame(game, unusedLetters);
         gameOver = res.getGameOver();
         guessNum++;
       } else {
@@ -135,6 +141,13 @@ public class LaunchWordle {
     return resultObj;
   }
 
+  public static List<String> updateUnusedLetters(String guess, List<String> unusedLetters) {
+    for (int i = 0; i < guess.length(); i++) {
+      unusedLetters.remove(Character.toString(guess.charAt(i)).toUpperCase());
+    }
+    return unusedLetters;
+  }
+
   public static String[][] setupGame() {
     String[] inputRow = "| | | | | |".split(""); // len=11
     String[] intersectionRow = "+-+-+-+-+-+".split(""); // len=11
@@ -151,13 +164,14 @@ public class LaunchWordle {
     return game;
   }
 
-  public static void displayGame(String[][] game) {
+  public static void displayGame(String[][] game, List<String> unusedLetters) {
     for (String[] row : game) {
       for (String s : row) {
         System.out.print(s);
       }
       System.out.println();
     }
+    System.out.println("Letters not used yet: " + unusedLetters);
   }
 }
 
@@ -186,7 +200,7 @@ class Dictionary {
 
   public Dictionary() throws DictionaryInitializationException {
     // guessable, wotd: 2315
-    try (Stream<String> stream = Files.lines(Path.of("./guessableWotd.txt"))) {
+    try (Stream<String> stream = Files.lines(Paths.get("./guessableWotd.txt"))) {
       stream.forEach(x -> {
         validDict.add(x);
         overallDict.add(x);
@@ -196,7 +210,7 @@ class Dictionary {
     }
 
     // guessable, never wotd: 10657
-    try (Stream<String> stream = Files.lines(Path.of("./guessableNeverWotd.txt"))) {
+    try (Stream<String> stream = Files.lines(Paths.get("./guessableNeverWotd.txt"))) {
       stream.forEach(x -> {
         overallDict.add(x);
       });
